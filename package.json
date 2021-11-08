@@ -1,7 +1,9 @@
 {
-  "name": "tailwind-components",
+  "name": "@collectivesci/tailwind-components",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "author": "ranalubis",
+  "main": "lib.js",
   "scripts": {
     "start": "craco start",
     "build": "craco build",
