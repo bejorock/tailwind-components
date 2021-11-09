@@ -78,5 +78,6 @@ buildEsm(files)
       "utf-8"
     )
   )
+  .then(() => fs.copyFileSync("README.md", "dist/README.md"))
   .catch((err) => console.log(err))
   .finally(() => process.exit(0));

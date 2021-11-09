@@ -1,6 +1,6 @@
 {
   "name": "@collectivesci/tailwind-components",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": false,
   "author": "ranalubis",
   "main": "lib.js",

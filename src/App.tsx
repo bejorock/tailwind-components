@@ -1,11 +1,18 @@
 import React, { useRef } from "react";
 import "./App.css";
 // import "./components/components.module.csss";
-import { AutoComplete, MultiComplete } from "./components";
+import {
+  AutoComplete,
+  ColorPicker,
+  IconPicker,
+  MultiComplete,
+} from "./components";
 
 function App() {
   const autoRef = useRef();
   const multiRef = useRef();
+  const colorRef = useRef();
+  const iconRef = useRef();
 
   return (
     <div className="grid grid-cols-8 gap-3 p-10">
@@ -69,6 +76,21 @@ function App() {
             );
           }}
         </MultiComplete>
+      </div>
+
+      <div className="field">
+        <label>Sample Color Picker</label>
+        <ColorPicker
+          ref={colorRef}
+          onChange={(value) => {
+            console.log(value);
+          }}
+        />
+      </div>
+
+      <div className="field">
+        <label>Sample Icon Picker</label>
+        <IconPicker ref={iconRef} onChange={(value) => console.log(value)} />
       </div>
     </div>
   );
