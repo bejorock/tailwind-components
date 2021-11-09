@@ -2,7 +2,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { useSafe } from "../util/safe";
-import "./components.css";
+// import "./components.css";
 
 export declare type MultiCompleteOptions = {
   defaultValue?: any;
@@ -53,10 +53,10 @@ const MultiComplete = forwardRef(
     }, []);
 
     return (
-      <div className="relative">
-        <div className="relative">
+      <div className="relative w-full">
+        <div className="relative x-input-container">
           <div
-            className={`mt-1 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:text-sm border rounded-md border-gray-300 disabled:bg-gray-200 py-1 px-1 bg-white flex flex-wrap gap-2 overflow-y-scroll multiComplete`}
+            className={`mt-1 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:text-sm border rounded-md border-gray-300 disabled:bg-gray-200 py-1 px-1 bg-white flex flex-wrap gap-2 overflow-y-scroll x-input-result`}
             tabIndex={1}
             onClick={(e) => {
               setPopup(true);
@@ -68,12 +68,13 @@ const MultiComplete = forwardRef(
             ) : (
               input.split(",").map((d, i) => (
                 <div
-                  className="flex items-center justify-center gap-2 bg-yellow-100 rounded py-1 px-1 cursor-pointer text-gray-700 hover:text-coolGray-900"
+                  className="flex items-center justify-center gap-2 bg-yellow-100 rounded py-1 px-1 cursor-pointer text-gray-700 hover:text-coolGray-900 x-input-result-item"
                   key={i}
                 >
                   {d}
                   <a
                     href="#"
+                    className="x-input-clear"
                     onClick={(e) => {
                       e.preventDefault();
 
@@ -98,12 +99,12 @@ const MultiComplete = forwardRef(
           </div>
         </div>
         {popup ? (
-          <div className="absolute w-full mt-2 py-2 rounded-md shadow-lg text-gray-800 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-1000">
+          <div className="absolute w-full mt-2 py-2 rounded-md shadow-lg text-gray-800 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-1000 x-input-popup">
             <div className="field pb-2 px-2">
               <input
                 type="text"
                 autoFocus={true}
-                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 disabled:bg-gray-200 rounded-md"
+                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 disabled:bg-gray-200 rounded-md x-input-query"
                 onBlur={() => {
                   setTimeout(() => {
                     setPopup(false);
@@ -114,7 +115,7 @@ const MultiComplete = forwardRef(
                 }}
               />
             </div>
-            <div className="max-h-44 overflow-y-auto">
+            <div className="max-h-44 overflow-y-auto x-input-query-result">
               {data.map((d, i) =>
                 children(d, i, (id, text) => {
                   // console.log(id, text);

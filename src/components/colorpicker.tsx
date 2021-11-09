@@ -40,9 +40,9 @@ const ColorPicker = forwardRef(
 
     return (
       <div className="relative w-full">
-        <div className="relative">
+        <div className="relative x-input-container">
           <div
-            className="mt-1 py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:text-sm border rounded-md border-gray-300 disabled:bg-gray-200 focus:ring-1"
+            className="mt-1 py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:text-sm border rounded-md border-gray-300 disabled:bg-gray-200 focus:ring-1 bg-white x-input-result"
             tabIndex={1}
             onClick={(e) => {
               setPopup(true);
@@ -53,7 +53,7 @@ const ColorPicker = forwardRef(
               }, 225);
             }}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 x-input-result-item">
               <div
                 className="border border-gray-400 w-10 bg-transparent"
                 style={input ? { background: input } : {}}
@@ -67,7 +67,7 @@ const ColorPicker = forwardRef(
           {input !== null && input !== undefined && input !== "" ? (
             <a
               href="#"
-              className="absolute top-2 right-3 text-gray-200 hover:text-gray-700"
+              className="absolute top-2 right-3 text-gray-200 hover:text-gray-700 x-input-clear"
               onClick={(e) => {
                 e.preventDefault();
 
@@ -81,7 +81,7 @@ const ColorPicker = forwardRef(
         </div>
         {/* <input type="hidden" name={name} value={defaultValue} ref={ref} /> */}
         {popup ? (
-          <div className="absolute w-full mt-2 max-h-56 overflow-y-scroll py-2 rounded-md shadow-lg text-gray-800 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+          <div className="absolute w-full mt-2 max-h-56 overflow-y-scroll py-2 rounded-md shadow-lg text-gray-800 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10 x-input-popup">
             {data.map((d, i) => (
               <div key={i} className="grid grid-cols-10 gap-1 my-1 mx-1">
                 {d.map((dd, j) => (

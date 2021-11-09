@@ -57,7 +57,9 @@ buildEsm(files)
     new Generator({
       entry: "lib.ts",
       output: "dist/lib.d.ts",
-    }).generate()
+    })
+      .generate()
+      .then(() => console.log("create lib.d.ts"))
   )
   .then(() =>
     fs.writeFileSync(
@@ -80,6 +82,7 @@ buildEsm(files)
       "utf-8"
     )
   )
+  .then(() => console.log("create package.json"))
   .then(() => fs.copyFileSync("README.md", "dist/README.md"))
   .catch((err) => console.log(err))
   .finally(() => process.exit(0));
