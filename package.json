@@ -1,6 +1,6 @@
 {
   "name": "@collectivesci/tailwind-components",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "private": false,
   "author": "ranalubis",
   "main": "lib.js",
@@ -73,5 +73,9 @@
     "tailwindcss-interaction-variants": "^5.0.0",
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1"
-  }
+  },
+  "keywords": [
+    "react",
+    "tailwindcss"
+  ]
 }

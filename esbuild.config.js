@@ -7,6 +7,7 @@ const {
   name,
   version,
   author,
+  keywords,
 } = require("./package.json");
 const { Generator } = require("npm-dts");
 
@@ -71,6 +72,7 @@ buildEsm(files)
           typings: "lib.d.ts",
           peerDependencies,
           dependencies,
+          keywords,
         },
         null,
         2
