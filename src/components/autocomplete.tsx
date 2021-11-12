@@ -1,112 +1,154 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { forwardRef, useEffect, useState } from "react";
-import { useSafe } from "../util/safe";
+import { IAutoCompleteControl } from "../hooks/useAutoComplete";
+import styled from "styled-components";
+import tw from "twin.macro";
 
 export declare type AutocompleteOptions = {
-  defaultValue?: any;
+  control: IAutoCompleteControl;
   children?: any;
   onChange?: any;
-  onQuery?: any;
-  style?: any;
+  className?: string;
 };
 
 const AutoComplete = forwardRef(
   (
-    {
-      defaultValue = null,
-      children,
-      onChange,
-      onQuery,
-      style = null,
-    }: AutocompleteOptions,
+    { control, children, onChange, className }: AutocompleteOptions,
     ref: any
   ) => {
     const [popup, setPopup] = useState(false);
-    const [input, setInput] = useState(defaultValue); // {}
-    const [query, setQuery] = useState("");
-    const [data, setData] = useState([]);
 
-    useEffect(() => {
-      if (defaultValue === "") {
-        setInput(null);
-        onChange(null);
-      }
-    }, [defaultValue]);
-
-    useSafe(async () => {
-      const d = await onQuery(
-        query,
-        input && input != "" && input != null ? input.id : null
-      );
-
-      setData(d);
-    }, [query, popup, input]);
+    useEffect(() => onChange(control.value), [control.value]);
 
     return (
-      <div className="relative w-full">
-        <div className="relative x-input-container">
+      <div className={className}>
+        <div className="x-input-container">
           <div
-            className="mt-1 py-2 px-3 bg-white focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:text-sm border rounded-md border-gray-300 disabled:bg-gray-200 focus:ring-1 x-input-result"
+            ref={ref}
+            className="x-input-result"
             tabIndex={1}
             onClick={(e) => {
               setPopup(true);
             }}
           >
-            <div className="flex items-center gap-2">
-              {input && input != "" ? input.name : <>&nbsp;</>}
-            </div>
+            <div>{control.value ? control.value.text : <>&nbsp;</>}</div>
           </div>
 
-          {input !== null && input !== undefined && input !== "" ? (
+          {control.value ? (
             <a
               href="#"
-              className="absolute top-2 right-3 text-gray-200 hover:text-gray-700 x-input-clear"
+              className="x-input-clear"
               onClick={(e) => {
                 e.preventDefault();
-
-                setInput(null);
-                onChange(null);
+                control.clear();
               }}
             >
               <FontAwesomeIcon icon={faTimes} />
             </a>
           ) : null}
         </div>
-        {/* <input type="hidden" name={name} value={defaultValue} ref={ref} /> */}
         {popup ? (
-          <div className="absolute w-full mt-2 py-2 rounded-md shadow-lg text-gray-800 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10 x-input-popup">
-            <div className="pb-2 px-2">
+          <div className="x-input-popup">
+            <div className="x-input-query">
               <input
                 type="text"
-                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 disabled:bg-gray-200 rounded-md x-input-query"
                 autoFocus={true}
-                defaultValue={input && input != "" ? input.name : null}
                 onBlur={() => {
                   setTimeout(() => {
                     setPopup(false);
                   }, 225);
                 }}
                 onFocus={(e) => {
-                  setQuery(e.target.value);
+                  control.setQuery(e.target.value);
                 }}
                 onChange={(e) => {
-                  setQuery(e.target.value);
+                  control.setQuery(e.target.value);
                 }}
               />
             </div>
-            <div className="max-h-40 overflow-y-auto x-input-query-result">
-              {data.map((d, i) =>
-                children(d, i, (id, name) => {
-                  setInput({ id, name });
-                  onChange({ id, name });
-                })
-              )}
-            </div>
+            <div className="x-input-query-result">{children}</div>
           </div>
         ) : null}
       </div>
     );
   }
 );
-export default AutoComplete;
+export default styled(AutoComplete)`
+  ${tw`relative`}
+  ${tw`w-full`}
+
+  & > .x-input-container {
+    ${tw`relative`}
+  }
+
+  & > .x-input-container > .x-input-result {
+    ${tw`mt-1`}
+    ${tw`py-2`}
+    ${tw`px-3`}
+    ${tw`bg-white`}
+    ${tw`focus:ring-indigo-500`}
+    ${tw`focus:border-indigo-500`}
+    ${tw`w-full`}
+    ${tw`shadow-sm`}
+    ${tw`sm:text-sm`}
+    ${tw`border`}
+    ${tw`rounded-md`}
+    ${tw`border-gray-300`}
+    ${tw`disabled:bg-gray-200`}
+    ${tw`focus:ring-1`}
+  }
+
+  & > .x-input-container > .x-input-result > div {
+    ${tw`flex`}
+    ${tw`items-center`}
+    ${tw`gap-2`}
+  }
+
+  & > .x-input-container > .x-input-clear {
+    ${tw`absolute`}
+    ${tw`top-2`}
+    ${tw`right-3`}
+    ${tw`text-gray-200`}
+    ${tw`hover:text-gray-700`}
+  }
+
+  & > .x-input-popup {
+    ${tw`absolute`}
+    ${tw`w-full`}
+    ${tw`mt-2`}
+    ${tw`py-2`}
+    ${tw`rounded-md`}
+    ${tw`shadow-lg`}
+    ${tw`text-gray-800`}
+    ${tw`bg-white`}
+    ${tw`ring-1`}
+    ${tw`ring-black`}
+    ${tw`ring-opacity-5`}
+    ${tw`focus:outline-none`}
+    ${tw`z-10`}
+  }
+
+  & > .x-input-popup > .x-input-query {
+    ${tw`pb-2`}
+    ${tw`px-2`}
+  }
+
+  & > .x-input-popup > .x-input-query > input {
+    ${tw`mt-1`}
+    ${tw`focus:ring-indigo-500`}
+    ${tw`focus:border-indigo-500`}
+    ${tw`block`}
+    ${tw`w-full`}
+    ${tw`shadow-sm`}
+    ${tw`sm:text-sm`}
+    ${tw`border-gray-300`}
+    ${tw`disabled:bg-gray-200`}
+    ${tw`rounded-md`}
+  }
+
+  & > .x-input-popup > .x-input-query-result {
+    ${tw`max-h-40`}
+    ${tw`overflow-y-auto`}
+  }
+`;

@@ -1,8 +1,0 @@
-.multiComplete {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.multiComplete::-webkit-scrollbar {
-  display: none;
-}

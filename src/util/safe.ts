@@ -36,3 +36,19 @@ export function useSafe(cb: () => Promise<any>, dependencies?: any[]) {
 
   return { error, complete };
 }
+
+export function useSafeMemo(
+  factory: () => Promise<any>,
+  dependencies?: any[],
+  defaultValue?: any
+) {
+  const [state, setState] = useState<any>(defaultValue);
+
+  useSafe(async () => {
+    const result = await factory();
+
+    setState(result);
+  }, dependencies);
+
+  return state;
+}

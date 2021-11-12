@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 
 import faker from "faker";
 
@@ -16,22 +16,11 @@ import useTable from "./hooks/useTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Table from "./components/table";
+import useAutoComplete from "./hooks/useAutoComplete";
+import useMultiComplete from "./hooks/useMultiComplete";
 
 const Button = styled.button`
   ${tw`bg-red-200`}
-`;
-
-const StyledWrapper = styled.div`
-  & .x-input-result,
-  & .x-input-popup {
-    --ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  & .x-input-result::-webkit-scrollbar,
-  & .x-input-popup::-webkit-scrollbar {
-    display: none;
-  }
 `;
 
 function generateData() {
@@ -46,24 +35,33 @@ function generateData() {
       paymentAmount: faker.datatype.number(),
       expiredDate: faker.datatype.datetime(),
       status: faker.helpers.randomize([1, 2, 4, 8]),
-      /* faker.helpers.randomize(["Belum Dikirim", "Terkirim"]),
-      faker.helpers.randomize(["Belum Dibayar", "Dibayar"]),
-      faker.helpers.randomize(["Belum Lunas", "Lunas"]),
-      faker.helpers.randomize(["Belum Selesai", "Selesai"]) */
     });
   }
 
   return tmp;
 }
 
+const dateFormat = new Intl.DateTimeFormat("id", {
+  dateStyle: "full",
+} as any);
+
 function App() {
   const autoRef = useRef();
   const multiRef = useRef();
   const colorRef = useRef();
   const iconRef = useRef();
-  const dateFormat = new Intl.DateTimeFormat("id", {
-    dateStyle: "full",
-  } as any);
+
+  const ac = useAutoComplete(async (query = "", existingVal) => {
+    return ["Entry 1", "Entry 2", "Entry 3"]
+      .filter((f) => f !== existingVal)
+      .filter((f) => f.includes(query));
+  });
+
+  const mc = useMultiComplete(async (query = "", existingVals = []) => {
+    return ["Entry 1", "Entry 2", "Entry 3"]
+      .filter((f) => f.includes(query))
+      .filter((f) => existingVals.findIndex((ff) => f === ff.id) == -1);
+  });
 
   const columns = useMemo(
     () => [
@@ -137,28 +135,24 @@ function App() {
           <label>Sample Auto Complete</label>
           <AutoComplete
             ref={autoRef}
+            control={ac.control}
             onChange={(value) => {
               console.log(value);
             }}
-            onQuery={async (query = "") => {
-              return ["Entry 1", "Entry 2", "Entry 3"].filter((f) =>
-                f.includes(query)
-              );
-            }}
           >
-            {(entry, i, select) => (
+            {ac.options.map((opt, i) => (
               <a
                 href="#"
                 className="block w-full px-3 py-2 hover:bg-gray-300 text-sm hover:rounded-md break-words"
                 key={i}
                 onClick={(e) => {
                   e.preventDefault();
-                  select(entry.id, entry.name);
+                  ac.select(opt, opt);
                 }}
               >
-                Hello world
+                {opt}
               </a>
-            )}
+            ))}
           </AutoComplete>
         </div>
 
@@ -166,31 +160,24 @@ function App() {
           <label>Sample Multi Complete</label>
           <MultiComplete
             ref={multiRef}
+            control={mc.control}
             onChange={(value) => {
               console.log(value);
             }}
-            onQuery={async (query, existingVals) => {
-              return ["Entry 1", "Entry 2", "Entry 3"]
-                .filter((f) => f.includes(query))
-                .filter((f) => existingVals.findIndex((ff) => f === ff) == -1);
-            }}
           >
-            {(entry, i, select) => {
-              return (
-                <a
-                  href="#"
-                  className="block w-full px-3 py-2 hover:bg-gray-100 text-sm hover:rounded-md break-words"
-                  key={i}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    // select(entry);
-                    select(entry, entry);
-                  }}
-                >
-                  {entry}
-                </a>
-              );
-            }}
+            {mc.options.map((opt, i) => (
+              <a
+                href="#"
+                className="block w-full px-3 py-2 hover:bg-gray-100 text-sm hover:rounded-md break-words"
+                key={i}
+                onClick={(e) => {
+                  e.preventDefault();
+                  mc.select(opt, opt);
+                }}
+              >
+                {opt}
+              </a>
+            ))}
           </MultiComplete>
         </div>
 
